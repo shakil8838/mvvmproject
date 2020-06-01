@@ -8,7 +8,9 @@ import xyz.xandsoft.mvvmproject.repositories.AuthenticationRepository
 import xyz.xandsoft.mvvmproject.utills.APIException
 import xyz.xandsoft.mvvmproject.utills.Coroutines
 
-class AuthenticationViewModel : ViewModel() {
+class AuthenticationViewModel(
+    private val authRepository: AuthenticationRepository
+) : ViewModel() {
 
     var loginEmail: String? = null
     var loginPass: String? = null
@@ -29,22 +31,24 @@ class AuthenticationViewModel : ViewModel() {
 
             try {
 
-                val loginResponse = AuthenticationRepository()
-                    .loginFunction(loginEmail!!, loginPass!!)
+                val loginResponse = authRepository.loginFunction(loginEmail!!, loginPass!!)
 
                 loginResponse.user?.let {
                     mAuthListener?.onAuthenticationSuccess(it)
                     // If User is not null just return to the thread
+                    authRepository.saveUser(it)
                     return@main
                 }
 
                 // Else the User is null show the error message
                 mAuthListener?.onAuthenticationFailed(loginResponse.message!!)
-            } catch (e: APIException){
+            } catch (e: APIException) {
                 mAuthListener?.onAuthenticationFailed(e.toString())
             }
         }
     }
+
+    fun getLoggedInUser() = authRepository.getUser()
 
     fun onSignupBtnClick(view: View) {
 
