@@ -1,30 +1,31 @@
 package xyz.xandsoft.mvvmproject.activities
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.activity_login.*
+import org.kodein.di.KodeinAware
+import org.kodein.di.android.kodein
+import org.kodein.di.generic.instance
 import xyz.xandsoft.mvvmproject.R
 import xyz.xandsoft.mvvmproject.activities.home.HomeActivity
-import xyz.xandsoft.mvvmproject.data.db.AppDatabase
 import xyz.xandsoft.mvvmproject.data.db.Users
 import xyz.xandsoft.mvvmproject.databinding.ActivityLoginBinding
 import xyz.xandsoft.mvvmproject.interfaces.authentication.AuthStateListener
-import xyz.xandsoft.mvvmproject.interfaces.network.NetworkCall
 import xyz.xandsoft.mvvmproject.model.viewmodel.AuthViewModelFactory
 import xyz.xandsoft.mvvmproject.model.viewmodel.AuthenticationViewModel
-import xyz.xandsoft.mvvmproject.repositories.AuthenticationRepository
 import xyz.xandsoft.mvvmproject.utills.hide
 import xyz.xandsoft.mvvmproject.utills.show
 import xyz.xandsoft.mvvmproject.utills.showToast
 
 class LoginActivity : AppCompatActivity(),
-    AuthStateListener {
+    AuthStateListener, KodeinAware {
+
+    override val kodein by kodein()
+    private val authViewModelFactory: AuthViewModelFactory by instance<AuthViewModelFactory>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,10 +36,6 @@ class LoginActivity : AppCompatActivity(),
     }
 
     private fun bindTheUI() {
-
-        val userDatabase = AppDatabase(this)
-        val authRepository = AuthenticationRepository(NetworkCall(), userDatabase)
-        val authViewModelFactory = AuthViewModelFactory(authRepository)
 
         // Bind the UI
         val authBinding: ActivityLoginBinding = DataBindingUtil
@@ -51,7 +48,9 @@ class LoginActivity : AppCompatActivity(),
 
         // bind with Interface
         authDataModel.mAuthListener = this
+        // End of Binging UI
 
+        // Checking is user is currently logged in or not
         authDataModel.getLoggedInUser().observe(this, Observer { user ->
             if (user != null) {
                 Intent(this, HomeActivity::class.java).also { myIntent ->

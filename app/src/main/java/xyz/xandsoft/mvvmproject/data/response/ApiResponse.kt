@@ -2,7 +2,7 @@ package xyz.xandsoft.mvvmproject.data.response
 
 import org.json.JSONObject
 import retrofit2.Response
-import xyz.xandsoft.mvvmproject.utills.APIException
+import xyz.xandsoft.mvvmproject.utills.Exception
 
 abstract class ApiResponse {
 
@@ -21,7 +21,7 @@ abstract class ApiResponse {
 
                 try {
                     messageResponse.append(JSONObject(it).getString("message"))
-                } catch (e: Exception) {
+                } catch (e: java.lang.Exception) {
                 }
 
                 messageResponse.append("\n")
@@ -31,7 +31,7 @@ abstract class ApiResponse {
             messageResponse.append("Error code: ${theResponse.code()}")
 
             // Finally throw the api exception
-            throw APIException(messageResponse.toString())
+            throw Exception(messageResponse.toString())
         }
     }
 }

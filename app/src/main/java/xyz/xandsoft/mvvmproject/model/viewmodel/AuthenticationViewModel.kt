@@ -2,10 +2,9 @@ package xyz.xandsoft.mvvmproject.model.viewmodel
 
 import android.view.View
 import androidx.lifecycle.ViewModel
-import xyz.xandsoft.mvvmproject.data.response.ApiResponse
 import xyz.xandsoft.mvvmproject.interfaces.authentication.AuthStateListener
 import xyz.xandsoft.mvvmproject.repositories.AuthenticationRepository
-import xyz.xandsoft.mvvmproject.utills.APIException
+import xyz.xandsoft.mvvmproject.utills.Exception
 import xyz.xandsoft.mvvmproject.utills.Coroutines
 
 class AuthenticationViewModel(
@@ -42,7 +41,7 @@ class AuthenticationViewModel(
 
                 // Else the User is null show the error message
                 mAuthListener?.onAuthenticationFailed(loginResponse.message!!)
-            } catch (e: APIException) {
+            } catch (e: Exception) {
                 mAuthListener?.onAuthenticationFailed(e.toString())
             }
         }

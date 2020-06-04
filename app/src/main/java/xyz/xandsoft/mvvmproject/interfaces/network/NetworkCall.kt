@@ -1,5 +1,6 @@
 package xyz.xandsoft.mvvmproject.interfaces.network
 
+import okhttp3.OkHttpClient
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response
@@ -18,11 +19,18 @@ interface NetworkCall {
     suspend fun getLogin(
         @Field("email") loginEmail: String,
         @Field("password") loginPassword: String
-    ) : Response<AuthResponse>
+    ): Response<AuthResponse>
 
     companion object {
-        operator fun invoke(): NetworkCall {
+        operator fun invoke(
+            networkInterceptor: NetworkInterceptor
+        ): NetworkCall {
+
+            val okHttpClient = OkHttpClient.Builder()
+                .addInterceptor(networkInterceptor).build()
+
             return Retrofit.Builder()
+                .client(okHttpClient)
                 .baseUrl("https://api.simplifiedcoding.in/course-apis/mvvm/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
