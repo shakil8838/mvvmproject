@@ -11,8 +11,10 @@ class AuthenticationViewModel(
     private val authRepository: AuthenticationRepository
 ) : ViewModel() {
 
+    var fullName: String? = null
     var loginEmail: String? = null
     var loginPass: String? = null
+    var confirmPassword: String? = null
 
     var mAuthListener: AuthStateListener? = null
 
@@ -51,5 +53,52 @@ class AuthenticationViewModel(
 
     fun onSignupBtnClick(view: View) {
 
+    }
+
+    fun onSignupSubmitBtnClick(view: View) {
+
+        if (loginEmail == null) {
+            mAuthListener?.onAuthenticationFailed("Please enter all the fields")
+            return
+        }
+
+        if (loginPass == null) {
+            mAuthListener?.onAuthenticationFailed("Please enter all the fields")
+            return
+        }
+
+        if (fullName == null) {
+            mAuthListener?.onAuthenticationFailed("Please enter all the fields")
+            return
+        }
+
+        if (!confirmPassword.equals(loginPass)) {
+            mAuthListener?.onAuthenticationFailed("Confirm password must same as password")
+            return
+        }
+
+        mAuthListener?.onAuthenticationStarted()
+
+        // Getting the login response
+        Coroutines.main {
+
+            try {
+
+                val loginResponse =
+                    authRepository.signupFunction(fullName!!, loginEmail!!, loginPass!!)
+
+                loginResponse.user?.let {
+                    mAuthListener?.onAuthenticationSuccess(it)
+                    // If User is not null just return to the thread
+                    authRepository.saveUser(it)
+                    return@main
+                }
+
+                // Else the User is null show the error message
+                mAuthListener?.onAuthenticationFailed(loginResponse.message!!)
+            } catch (e: Exception) {
+                mAuthListener?.onAuthenticationFailed(e.toString())
+            }
+        }
     }
 }

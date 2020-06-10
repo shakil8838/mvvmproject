@@ -21,6 +21,14 @@ interface NetworkCall {
         @Field("password") loginPassword: String
     ): Response<AuthResponse>
 
+    @FormUrlEncoded
+    @POST("singup")
+    suspend fun getSignup(
+        @Field("name") fullName: String?,
+        @Field("email") singupEmail: String?,
+        @Field("password") signupPassword: String?
+    ): Response<AuthResponse>
+
     companion object {
         operator fun invoke(
             networkInterceptor: NetworkInterceptor

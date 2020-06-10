@@ -19,6 +19,14 @@ class AuthenticationRepository(
         }
     }
 
+    suspend fun signupFunction(
+        fullName: String,
+        email: String,
+        pass: String
+    ): AuthResponse {
+        return apiResponse { api.getSignup(fullName, email, pass) }
+    }
+
     suspend fun saveUser(user: Users) = db.userDao().upsert(user)
 
     fun getUser() = db.userDao().getUser()
