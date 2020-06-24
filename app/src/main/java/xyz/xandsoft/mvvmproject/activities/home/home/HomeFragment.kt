@@ -6,13 +6,17 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import org.kodein.di.android.x.kodein
+import org.kodein.di.KodeinAware
+import org.kodein.di.generic.instance
 import xyz.xandsoft.mvvmproject.R
+import xyz.xandsoft.mvvmproject.databinding.HomeFragmentBinding
 
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), KodeinAware {
 
-    companion object {
-        fun newInstance() = HomeFragment()
-    }
+    override val kodein by kodein()
+    private val homeViewModelFactory: HomeViewModelFactory by instance<HomeViewModelFactory>()
 
     private lateinit var viewModel: HomeViewModel
 
@@ -20,13 +24,19 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.home_fragment, container, false)
-    }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(HomeViewModel::class.java)
-        // TODO: Use the ViewModel
+        val homeFragmentDataBinding: HomeFragmentBinding = DataBindingUtil.inflate(
+            inflater,
+            R.layout.home_fragment, container, false
+        )
+
+        viewModel = ViewModelProviders.of(this, homeViewModelFactory)
+            .get(HomeViewModel::class.java)
+
+        homeFragmentDataBinding.homeFragmentViewModel = viewModel
+        homeFragmentDataBinding.lifecycleOwner = this
+
+        return homeFragmentDataBinding.root
     }
 
 }

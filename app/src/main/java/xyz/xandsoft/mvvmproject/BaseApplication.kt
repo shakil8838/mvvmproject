@@ -8,6 +8,7 @@ import org.kodein.di.generic.bind
 import org.kodein.di.generic.instance
 import org.kodein.di.generic.provider
 import org.kodein.di.generic.singleton
+import xyz.xandsoft.mvvmproject.activities.home.home.HomeViewModelFactory
 import xyz.xandsoft.mvvmproject.data.db.AppDatabase
 import xyz.xandsoft.mvvmproject.interfaces.network.NetworkCall
 import xyz.xandsoft.mvvmproject.interfaces.network.NetworkInterceptor
@@ -24,5 +25,6 @@ class BaseApplication : Application(), KodeinAware {
         bind() from singleton { AppDatabase(instance()) }
         bind() from singleton { AuthenticationRepository(instance(), instance()) }
         bind() from provider { AuthViewModelFactory(instance()) }
+        bind() from provider { HomeViewModelFactory(instance()) }
     }
 }

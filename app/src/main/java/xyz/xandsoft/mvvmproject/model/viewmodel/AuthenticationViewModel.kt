@@ -6,6 +6,7 @@ import xyz.xandsoft.mvvmproject.interfaces.authentication.AuthStateListener
 import xyz.xandsoft.mvvmproject.repositories.AuthenticationRepository
 import xyz.xandsoft.mvvmproject.utills.Exception
 import xyz.xandsoft.mvvmproject.utills.Coroutines
+import xyz.xandsoft.mvvmproject.utills.NetworkException
 
 class AuthenticationViewModel(
     private val authRepository: AuthenticationRepository
@@ -44,6 +45,8 @@ class AuthenticationViewModel(
                 // Else the User is null show the error message
                 mAuthListener?.onAuthenticationFailed(loginResponse.message!!)
             } catch (e: Exception) {
+                mAuthListener?.onAuthenticationFailed(e.toString())
+            } catch (e: NetworkException) {
                 mAuthListener?.onAuthenticationFailed(e.toString())
             }
         }
@@ -97,6 +100,8 @@ class AuthenticationViewModel(
                 // Else the User is null show the error message
                 mAuthListener?.onAuthenticationFailed(loginResponse.message!!)
             } catch (e: Exception) {
+                mAuthListener?.onAuthenticationFailed(e.toString())
+            } catch (e: NetworkException) {
                 mAuthListener?.onAuthenticationFailed(e.toString())
             }
         }

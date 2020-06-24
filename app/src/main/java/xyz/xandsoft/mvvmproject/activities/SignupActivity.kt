@@ -7,13 +7,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.activity_login.*
-import org.kodein.di.Kodein
+import org.kodein.di.android.kodein
 import org.kodein.di.KodeinAware
 import org.kodein.di.generic.instance
 import xyz.xandsoft.mvvmproject.R
 import xyz.xandsoft.mvvmproject.activities.home.HomeActivity
 import xyz.xandsoft.mvvmproject.data.db.Users
-import xyz.xandsoft.mvvmproject.databinding.ActivityLoginBinding
 import xyz.xandsoft.mvvmproject.databinding.ActivitySignupBinding
 import xyz.xandsoft.mvvmproject.interfaces.authentication.AuthStateListener
 import xyz.xandsoft.mvvmproject.model.viewmodel.AuthViewModelFactory
@@ -24,7 +23,7 @@ import xyz.xandsoft.mvvmproject.utills.showToast
 
 class SignupActivity : AppCompatActivity(), AuthStateListener, KodeinAware {
 
-    override val kodein by kodein
+    override val kodein by kodein()
     private val authViewModelFactory: AuthViewModelFactory by instance<AuthViewModelFactory>()
 
     override fun onCreate(savedInstanceState: Bundle?) {

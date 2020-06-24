@@ -15,6 +15,16 @@ class HomeActivity : AppCompatActivity() {
         setSupportActionBar(home_toolbar)
         val navController = Navigation.findNavController(this, R.id.home_fragment)
         NavigationUI.setupWithNavController(home_navigation_view, navController)
-        NavigationUI.setupActionBarWithNavController(this, navController)
+        NavigationUI.setupActionBarWithNavController(
+            this, navController,
+            home_drawer_layout
+        )
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        return NavigationUI.navigateUp(
+            Navigation.findNavController(this, R.id.home_fragment),
+            home_drawer_layout
+        )
     }
 }

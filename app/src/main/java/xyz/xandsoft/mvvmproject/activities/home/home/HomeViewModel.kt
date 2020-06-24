@@ -1,7 +1,11 @@
 package xyz.xandsoft.mvvmproject.activities.home.home
 
 import androidx.lifecycle.ViewModel
+import xyz.xandsoft.mvvmproject.repositories.AuthenticationRepository
 
-class HomeViewModel : ViewModel() {
-    // TODO: Implement the ViewModel
+class HomeViewModel(
+    repository: AuthenticationRepository
+) : ViewModel() {
+
+    val users = repository.getUser()
 }
